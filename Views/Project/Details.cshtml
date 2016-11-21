@@ -1,0 +1,135 @@
+﻿@model PPlanner.Models.Project
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+@{
+    ViewBag.Title = resources["ProjectDetailsTitle"] + Model.Name;
+    var chartSrc = ViewBag.ChartData;
+}
+
+
+@*@Html.MvcSiteMap().SiteMapPath()*@
+
+@if (Model.Name != null)
+{
+    @Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+        { "lvl", "3" },
+        { "projectId", Model.ProjectId },
+        { "projectName", Model.Name},
+        { "variable", @resources["BreadCrumbProjectDetailsSecond"] }
+    })
+
+    <div class="row mainwrapper">
+        <div class="span2"><p></p></div>
+        <div class="panel">
+            <div class="panel-heading">
+                <h4 style="float:left;">@resources["ProjectDetailsHeaderTxt"] @Html.DisplayTextFor(model => model.Name)</h4>
+
+                <div>
+                    <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Project")">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        @resources["BackButton"]
+                    </a>
+                    @if (User.IsInRole("Product owner"))
+                    {
+                        <a class="btn btn-xs btn-danger" style="float:right; margin-right:10px;" href="@Url.Action("Undone", "Project", new { ProjectId = Model.ProjectId.ToString() })">
+                            <span class="glyphicon glyphicon-asterisk"></span>
+                            @resources["UndoneTasksInProject"]
+                        </a>
+                    }                    
+
+                    <a class="btn btn-xs btn-info" style="float:right; margin-right:10px;" href="@Url.Action("Sprintboard", "Sprint", new { ProjectId = Model.ProjectId.ToString(), Name = Model.Name.ToString() })">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        @resources["ScrumboardButton"]
+                    </a>
+                    <a class="btn btn-xs btn-warning" style="float:right; margin-right:10px;" href="@Url.Action("Index", "Backlog", new { ProjectId = Model.ProjectId.ToString() })">
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                        @resources["BacklogButton"]
+
+                    </a>                   
+                   
+                </div>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div class="panel-body">
+                <div class="col-sm-3 col-md-3">
+                    <p>@resources["ProjectPeriod"]</p>
+                    <div class="list-group-item disabled">@Html.DisplayFor(model => model.StartDate) - @Html.DisplayFor(model => model.EndDate)</div>
+                    <p>@resources["ProjectCurrentSprint"]</p>
+                    <div class="list-group-item disabled">@ViewBag.sprintStart - @ViewBag.sprintEnd</div>
+                    <p>@resources["ProjectLeftDays"]</p>
+                    <div class="list-group-item disabled">@ViewBag.remainingDays</div>
+                    <p>@resources["ProjectTotalDays"]</p>
+                    <div class="list-group-item disabled">@ViewBag.totalDays</div>
+
+                    <p>@resources["ProjectDetailsCurrentSprintCountTasks"]</p>
+                    <div class="list-group-item disabled">@ViewBag.currentSprintCountTasks</div>
+                </div>
+                <!--sidebar-->
+                <div class="col-sm-9 col-md-9">
+                    <div class="contentwrap ">
+                        <h3 class="text-center login-title">
+                            <span class="glyphicon glyphicon-signal"></span>
+                            @resources["ProjectBurnDownChart"]
+                        </h3>
+                        <div class="demo-container">
+                            <div id="graphholder" class="graphholder"></div>
+                        </div>
+                        @if (User.IsInRole("Product owner") && ViewBag.NoUserstories > 0)
+	                    {
+                            <div class="demo-container">
+                                <img src="@chartSrc" class="graphholder" />
+                            </div>
+	                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("AddNewDeveloper", "Project", FormMethod.Post, new { @Class = "form-horizontal" }))
+        {
+            <div class="panel">
+                <div class="panel-heading">
+                    <h4 style="float:left;">@resources["DevelopersList"]</h4>
+                    @if (User.IsInRole("Scrum master"))
+                    {
+                        <a class="btn btn-xs btn-success" style="float:right; margin-right:10px;" href="@Url.Action("AddNewDeveloper", "ProjectDevelopers", new { ProjectId = Model.ProjectId.ToString() })">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                            @resources["AddButton"]
+
+                        </a>
+                    }
+
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.ValidationSummary(true)
+                <fieldset>
+                    <legend>Project</legend>
+                    <div class="panel-body">
+                        <br />
+                        <div class="col-md-10 col-md-offset-1">
+
+                            @Html.Action("ListDevelopers", "Project", new { Model.ProjectId })
+
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+        }
+    </div>
+
+    @Html.Hidden("GraphPostUrl", Url.Action("GetGraph", "Project"))
+    @Html.Hidden("ProjectId", Model.ProjectId.ToString())
+
+    @section Scripts {
+
+    }
+}
+else
+{
+    @Html.Partial("_NoRightsForThis");
+}
+
+

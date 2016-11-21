@@ -1,0 +1,124 @@
+﻿@model IEnumerable<PPlanner.Models.Project>
+@{ 
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    ViewBag.Title = resources["ProjectIndexTitle"];
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "22" },
+    { "variable", resources["BreadCrumbProjectListFirst"] }
+})
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+        @input
+    }
+    else
+    {
+        @input.Substring(0, length)<text>...</text>
+    }
+}
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 style="float:left;">@resources["ProjectList"]</h4>
+            @if (User.IsInRole("Admin"))
+            {
+                <div>
+                    <a href="@Url.Action("Create", "Project")" class="btn btn-xs btn-success pull-right" style="float:right">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        @resources["CreateProjectButton"]
+                    </a>
+                </div>
+            }
+            <div>
+                <a href="@Url.Action("Tasks", "Project")" class="btn btn-xs btn-warning pull-right" style="float:right; margin-right:10px;">
+
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    @resources["TasksButton"]
+                    @if (ViewBag.NumOfTasksToday > 0)
+                    {
+                        <span class="badge badge-notify btn-danger">@ViewBag.NumOfTasksToday</span>
+                    }
+
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th>
+                        @resources["ProjectName"]
+                    </th>
+                    <th>
+                        @resources["ProjectStartDate"]
+                    </th>
+                    <th>
+                       @resources["ProjectEndDate"]
+                    </th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th></th>
+                    }
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    if (true)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("Details", "Project", new { id = item.ProjectId }, null)" class="btn btn-xs btn-default">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            </td>
+                            <td class="col-md-7">
+                                @Html.DisplayFor(modeItel => item.Name)
+                            </td>
+                            <td class="col-md-2">
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td class="col-md-2">
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td class="col-md-2">
+                                    <a href="@Url.Action("Edit", "Project", new { id = item.ProjectId })" class="btn btn-success btn-xs">
+                                        <span class="glyphicon glyphicon-edit"></span>
+
+                                    </a>
+
+                                    <a href="@Url.Action("Delete", "Project", new { id = item.ProjectId })" class="btn btn-danger btn-xs">
+                                        <span class="glyphicon glyphicon-trash"></span>
+
+                                    </a>
+
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </table>
+            <br />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+}
+
+

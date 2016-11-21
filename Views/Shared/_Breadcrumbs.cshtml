@@ -1,0 +1,61 @@
+﻿@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+<ol class="row breadcrumb" style="margin-bottom: 0px !important;">
+    @switch (Convert.ToInt32(ViewData["lvl"]))
+    {
+        //if breadcrumb is first level
+        case 1:
+            <li class="active"><a href="@Url.Action("Index", "Project")"></a></li>
+            break;
+
+        //if breadcrumb is second level + ID
+        case 2:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>
+            <li class="active"><a href="@Url.Action("Details", "Project", new { id = Convert.ToInt32(ViewData["projectId"]) })" > @Convert.ToString(ViewData["projectName"]) </a></li>
+            break;
+        
+        //if breadcrumb is second level + variable (non ID) -> all to home page + text
+        case 22:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>            
+            <li class="active">@Convert.ToString(ViewData["variable"])</li>
+            break;
+
+        //if breadcrumb is second leve + two variables -> all to homepage + non dynamic links to list users
+        case 23:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>
+            <li><a href="@Url.Action("UserManage", "Account")">@Convert.ToString(ViewData["firstVar"])</a></li>
+            <li class="active">@Convert.ToString(ViewData["variable"])</li>
+            break;
+        
+        //if breadcrumb is second leve + two variables -> all to homepage + userprofile links
+        case 24:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>
+            <li><a href="@Url.Action("Details", "Account", new { name=@Convert.ToString(ViewData["firstVar"])})">@resources["BreadCrumbUserProfileFirst"] : @Convert.ToString(ViewData["firstVar"])</a></li>
+            <li class="active">@Convert.ToString(ViewData["variable"])</li>
+            break;
+        
+        case 25:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>
+            <li><a href="#">@Convert.ToString(ViewData["var1"])</a></li>
+            <li class="active">@Convert.ToString(ViewData["var2"])</li>
+            break;
+        case 26:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>
+            <li><a href="@Url.Action("Index", "Resources")">@Convert.ToString(ViewData["firstVar"])</a></li>
+            <li class="active">@Convert.ToString(ViewData["variable"])</li>
+            break;
+
+        case 3:
+            <li><a href="@Url.Action("Index", "Project")"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;</a></li>
+            <li><a href="@Url.Action("Details", "Project", new { id = Convert.ToInt32(ViewData["projectId"]) })"> @Convert.ToString(ViewData["projectName"]) </a></li>
+            <li class="active"><a href="#">@Convert.ToString(ViewData["variable"])</a></li>
+            break;
+
+        default:
+            <li><a href="@Url.Action("Index", "Project")"></a></li>
+            break;
+    }
+</ol>
+

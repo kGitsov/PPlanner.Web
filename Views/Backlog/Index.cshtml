@@ -1,0 +1,190 @@
+﻿@model IEnumerable<PPlanner.Models.UserStory>
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    ViewBag.Title = @resources["BacklogIndexTitle"];
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "3" },
+    { "projectId", ViewBag.CurrentProject },
+    { "variable", @resources["BreadCrumbBacklogIndexSecond"] }
+})
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 style="float:left;">@resources["BacklogIndexHeaderTxt"] <a href="@Url.Action("Details", "Project", new { id = ViewBag.CurrentProject })">@ViewBag.ProjectName</a></h4>
+
+            <div>
+                <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Details", "Project", new { id = ViewBag.CurrentProject })">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    @resources["BackButton"]
+                </a>
+                @if (User.IsInRole("Scrum master"))
+                {                    
+                    <a class="btn btn-xs btn-warning" style="float:right; margin-right:10px;" href="@Url.Action("EditSprints", "Project", new { ProjectId = ViewBag.CurrentProject })">
+                        <span class="glyphicon glyphicon-cog"></span> 
+                        @resources["SettingsButton"]
+                    </a>
+                }
+
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row mainwrapper">
+                <!--sidebar-->
+                <div class="col-sm-3 col-md-3">
+                    @Html.Action("SprintList", "Iteration", new { ProjectId = ViewBag.CurrentProject })
+                </div>
+                <!--body-->
+                <div class="col-sm-9 col-md-9">
+                    <div class="contentwrap">
+                        @if (User.IsInRole("Scrum master"))
+                        {
+                            <h3 class="text-center login-title">@resources["BacklogIndexHeader"]</h3>
+                            
+                            <div class="inline">
+                                @using (Html.BeginForm("Create", "Backlog", FormMethod.Post))
+                                {
+                                    @Html.ValidationSummary(true)
+                                    <p>
+                                        <fieldset>
+                                            <legend>Userstory</legend>
+
+                                            <div class="input-append">
+                                                <div class="col-md-10">
+                                                    <input class="form-control" form-control" id="Title" name="Title" type="text" value="" placeholder="@resources["BacklogIndexWriteTaskTitle"]" style="margin-left:10px;">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-sm btn-success" type="submit">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                        @resources["AddButton"]
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <span class="field-validation-valid" data-valmsg-for="Description" data-valmsg-replace="true"></span>
+
+                                            <input id="BackLogPriority" name="BackLogPriority" type="hidden" value="1000" class="form-control">
+                                            <input id="Effort" name="Effort" type="hidden" value="1" class="form-control">
+                                            <input id="UserProfile_UserId" name="UserId" type="hidden" value="" class="form-control">
+                                            <input id="Project_ProjectId" name="Project_ProjectId" type="hidden" value="@ViewBag.CurrentProject" class="form-control">
+                                            <input id="ItemStatus_ItemStatusId" name="ItemStatus_ItemStatusId" type="hidden" value="1" class="form-control">
+                                            <input id="Sprint_SprintId" name="Sprint_SprintId" type="hidden" value="1" class="form-control">
+                                            <input id="CompletedDate" name="Sprint_SprintId" type="hidden" value="" class="form-control">
+                                            <input id="User_Effort" name="User_Effort" type="hidden" value="1" class="form-control">
+
+                                        </fieldset>
+                                    </p>
+                                }
+                            </div>
+                            <br />
+                        }
+
+                        @if(!User.IsInRole("Developer"))
+                        {
+                            @:<div id="tsortable" class="table">                                
+                        }
+                        else
+                        {
+                            @:<div id="" class="table">
+                        }
+                                    
+                                    <table class="table">
+                                        <tr>
+                                            <th style="min-width:100px;"></th>
+                                            <th class="col-sm-4">@resources["BacklogIndexName"]</th>
+                                            <th class="col-sm-1">@resources["BacklogIndexStatus"]</th>
+                                            <th class="col-sm-1">@resources["BacklogIndexPriority"]</th>
+                                            <th class="col-sm-1">@resources["BacklogIndexEffort"]</th>
+                                            <th class="col-sm-3">@resources["BacklogIndexSprint"]</th>
+
+                                            <th class="col-sm-2">@resources["BacklogIndexUsername"]</th>
+                                        </tr>
+
+                                        <tbody>
+
+                                            @if (Model.Count() > 0)
+                                            {
+                                                foreach (var item in Model)
+                                                {
+                                                    <tr data-id="@item.Id">
+                                                        <td>
+
+                                                                <i class="icon-move"></i>
+                                                                <a class="editForm" href="@Url.Action("Details", new { id = item.Id })">
+                                                                    <i class="btn btn-xs btn-xs btn-default">
+                                                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                                                    </i>
+                                                                </a>
+                                                            @if (!User.IsInRole("Developer"))
+                                                            {
+                                                            }
+                                                    
+                                                            @if (User.IsInRole("Admin") || User.IsInRole("Scrum master"))
+                                                            {
+                                                                <i class="icon-move"></i>
+                                                                <a class="editForm" href="@Url.Action("Edit", new { id = item.Id })">
+                                                                    <i class="btn btn-xs btn-xs btn-success">
+                                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                                    </i>
+                                                                </a>
+                                                                <i class="icon-move"></i>
+                                                                <a class="editForm" href="@Url.Action("Delete", new { id = item.Id })">
+                                                                    <p class="btn btn-xs btn-xs btn-danger">
+                                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                                    </p>
+                                                                </a>
+                                                            }                                                    
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Title)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ItemStatus.Status)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.BackLogPriority)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Effort)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.Sprint.Name)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.UserProfile.UserName )
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="5">@resources["NoResultsAddNewTasks"]</td>
+                                                </tr>
+                                            }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Hidden("PrioritySortURL", Url.Action("PrioritySort", "Backlog"))
+
+@Html.Hidden("ProjectId", (string)ViewBag.CurrentProject)
+
+

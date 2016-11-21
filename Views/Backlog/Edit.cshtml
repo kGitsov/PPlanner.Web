@@ -1,0 +1,110 @@
+﻿@model PPlanner.Models.UserStory
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    ViewBag.Title = resources["BackLogEditTitle"];
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "3" },
+    { "projectId", Model.Project_ProjectId },
+    { "projectName", Model.Project.Name },
+    { "variable", resources["BreadCrumbBacklogEditSecond"]}
+})
+
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+    @using (Html.BeginForm("Edit", "Backlog", FormMethod.Post, new { @Class = "form-horizontal" }))
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <h4 style="float:left;">@resources["BacklogEditHeadingTxt"] @Model.Title </h4>
+                <div>
+                    <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Backlog", new { ProjectId = Model.Project_ProjectId })">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        @resources["BackButton"]
+                    </a>
+                    <button type="submit" class="btn btn-xs btn-success" style="float:right; margin-right: 10px;">
+                        <span class="glyphicon glyphicon-floppy-disk"> </span>
+                        @resources["SaveButton"]
+                    </button>
+                </div>
+                <div style="clear:both;"></div>
+                <h6><i>@resources["BacklogEditInProject"] <a href="@Url.Action("Details","Project", new { id=Model.Project_ProjectId})">@Model.Project.Name</a></i></h6>
+            </div>
+        
+            <div class="panel-body">
+                <div class="col-md-10 col-md-offset-1">
+                    @Html.ValidationSummary(true)
+                    <fieldset>
+                        <legend>UserStory</legend>
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="account-wall">
+
+                                @Html.HiddenFor(model => model.Id)
+                                @Html.HiddenFor(model => model.Project_ProjectId)
+                                @Html.HiddenFor(model => model.CompletedDate)
+                                @Html.HiddenFor(model => model.User_Effort)
+
+                                <div class="form-group">
+                                    <div class="controls">
+                                        @resources["TaskName"]
+                                        @Html.TextBoxFor(model => model.Title, new { @Class = "form-control", @Placeholder = @resources["PleaseEnterText"] })
+                                        @Html.ValidationMessageFor(model => model.Title)                                    
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="controls">
+                                        @resources["TaskPriority"]
+                                        @Html.TextBoxFor(model => model.BackLogPriority, new { @Class = "form-control", @Placeholder = @resources["PleaseEnterText"] })
+                                        @Html.ValidationMessageFor(model => model.BackLogPriority)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="controls">
+                                        @resources["TaskEffort"]
+                                        @Html.TextBoxFor(model => model.Effort, new { @Class = "form-control", @Placeholder = @resources["PleaseEnterNum"] })
+                                        @Html.ValidationMessageFor(model => model.Effort)
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="controls">
+                                        @resources["BacklogEditUserName"]
+                                        @Html.DropDownList("UserProfile_UserId", null, @resources["PleaseWait"], new { @Class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.UserProfile_UserId)
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="controls">
+                                        @resources["BacklogEditStatus"]
+                                        @Html.DropDownList("ItemStatus_ItemStatusId", null, @resources["PleaseWait"], new { @Class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ItemStatus_ItemStatusId)
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="controls">
+                                        @resources["TaskSprint"]
+                                        @Html.DropDownList("Sprint_SprintId", null, @resources["PleaseWait"], new { @Class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Sprint_SprintId)
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    </fieldset>  
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+
+}

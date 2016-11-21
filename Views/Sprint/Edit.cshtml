@@ -1,0 +1,118 @@
+﻿@model PPlanner.Models.UserStory
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+@{
+    ViewBag.Title = @resources["SprintEditTitle"];
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "3" },
+    { "projectId", Model.Project_ProjectId },
+    { "projectName", Model.Project.Name },
+    { "variable", @resources["BreadCrumbSprintEditSecond"]}
+})
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+@using (Html.BeginForm("Edit", "Sprint", FormMethod.Post, new { @Class = "form-horizontal" }))
+{
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 style="float:left;">@resources["BacklogEditHeadingTxt"] @Model.Title </h4>
+
+            <ul class="list-unstyled">
+                <li>
+                    <a href="@Url.Action("Index", "Sprint", new { ProjectId = Model.Project_ProjectId, SprintId = Model.Sprint_SprintId })" class="btn btn-xs btn-default pull-right">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        @resources["BackButton"]
+                    </a>
+                </li>
+                <li>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-xs btn-success" style="float:right; margin-right: 10px;">
+                                <span class="glyphicon glyphicon-floppy-disk"> </span>
+                                @resources["SaveButton"]
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div style="clear:both;"></div>
+            <h6><i>@resources["SprintEditInSprint"] <a href="@Url.Action("Index", "Sprint", new { ProjectId = Model.Project_ProjectId, SprintId = Model.Sprint_SprintId })">@Model.Sprint.Name</a></i></h6>
+            <h6><i>@resources["BacklogEditInProject"] <a href="@Url.Action("Details", "Project", new { id = Model.Project_ProjectId })">@Model.Project.Name</a></i></h6>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                @Html.ValidationSummary(true)
+
+                <fieldset>
+                    <legend>UserStory</legend>
+                    <div class="col-md-10 col-md-offset-1">
+                        <h3>@resources["SprintEditTitle"]</h3>
+
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.Project_ProjectId)
+                        @Html.HiddenFor(model => model.BackLogPriority)
+                        @Html.HiddenFor(model => model.Sprint_SprintId)
+                        @Html.HiddenFor(model => model.CompletedDate)
+                        @Html.HiddenFor(model => model.User_Effort)
+                        
+                        <div class="control-group">
+                            <div class="display-label">
+                                @resources["SprintEditTaskName"]
+                            </div>
+
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Title, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Title)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="display-label">
+                                @resources["SprintEditEffort"]
+                            </div>
+
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Effort, new { @Class = "form-control", @Placeholder = @resources["PleaseEnterNum"] })
+                                @Html.ValidationMessageFor(model => model.Effort)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="display-label">
+                                @resources["SprintEditUserInRole"]
+                            </div>
+
+                            <div class="controls">
+                                @Html.DropDownList("UserProfile_UserId", null, "Моля изберете...", new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.UserProfile_UserId)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="display-label">
+                                @resources["SprintEditStatus"]
+                            </div>
+
+                            <div class="controls">
+                                @Html.DropDownList("ItemStatus_ItemStatusId", null, @resources["PleaseWait"], new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ItemStatus_ItemStatusId)
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </fieldset>               
+            </div>
+        </div>  
+    </div>
+}
+</div>
+
+@section Scripts {
+
+}

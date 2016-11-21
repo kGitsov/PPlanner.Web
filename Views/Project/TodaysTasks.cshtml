@@ -1,0 +1,51 @@
+﻿@model IEnumerable<PPlanner.Models.UserStory>
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+
+<table class="table">
+    <tbody>
+        <tr>
+            <th class="col-sm-5">@resources["TasksTodayTitle"]</th>
+            <th class="col-sm-2">@resources["TasksTodayUserEffort"]</th>
+            <th class="col-sm-3">@resources["TasksTodayProjectName"]</th>
+            <th class="col-sm-2">@resources["TasksTodayEffort"]</th>
+        </tr>
+
+    </tbody>
+    <tbody>
+        @if (Model.Count() != 0)
+        {
+            foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User_Effort)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project.Name)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Effort)
+
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>@resources["TasksTodayNothingToDo"]</td>
+            </tr>
+        }   
+
+    </tbody>
+</table>
