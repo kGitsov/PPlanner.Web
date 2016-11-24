@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PPlanner.Models.UserStory>
+﻿@model PagedList.IPagedList<PPlanner.Models.UserStory>
+@using PagedList.Mvc
 
 @{
     Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
@@ -49,3 +50,5 @@
 
     </tbody>
 </table>
+@Html.PagedListPager(Model, page => Url.Action("Index",
+new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

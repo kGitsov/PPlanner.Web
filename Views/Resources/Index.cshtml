@@ -1,5 +1,5 @@
-﻿@model Dictionary<int, PPlanner.Models.Resources> 
-
+﻿@model PagedList.IPagedList<PPlanner.Models.Resources> 
+@using PagedList.Mvc;
 @{
     Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
 }
@@ -57,22 +57,24 @@
                     {
                         <tr>
                             <td>
-                                <a href="@Url.Action("Edit", "Resources", new { id = item.Key })" class="btn btn-success btn-xs">
+                                <a href="@Url.Action("Edit", "Resources", new { id = item.ResId })" class="btn btn-success btn-xs">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </td>
                             <td>
-                               @item.Value.ResGroup
+                               @item.ResGroup
                             </td>
                             <td>
-                                @item.Value.ResName
+                                @item.ResName
                             </td>
                             <td>
-                                @item.Value.ResValue
+                                @item.ResValue
                             </td>
                         </tr>
                     }
                 </table>
+                @Html.PagedListPager(Model, page => Url.Action("Index",
+            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
             </div>
         </div>
     </div>

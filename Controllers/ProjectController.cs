@@ -13,6 +13,7 @@ using MvcSiteMapProvider;
 using System.Collections;
 using System.Web.Helpers;
 using System.IO;
+using PagedList;
 
 namespace PPlanner.Controllers
 {
@@ -64,9 +65,9 @@ namespace PPlanner.Controllers
 
         //
         // GET: /Project/
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-                         
+            
             //Guid userGuid = (Guid)Membership.GetUser().ProviderUserKey;
             if (!User.IsInRole("Admin"))
             {
@@ -106,8 +107,10 @@ namespace PPlanner.Controllers
             ViewBag.NumOfTasksToday = db.UserStories
                 .Where(us => us.UserProfile_UserId == WebMatrix.WebData.WebSecurity.CurrentUserId
                 && us.CompletedDate == null && us.Sprint.EndDate >= DateTime.Today).Count();
-
-            return View(db.Projects.ToList());
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            var projectss = db.Projects.OrderBy(pr => pr.ProjectId);
+            return View(projectss.ToPagedList(pageNumber, pageSize));
         }
 
 
@@ -606,14 +609,17 @@ namespace PPlanner.Controllers
 
 
 
-        public ActionResult TodaysTasks()
+        public ActionResult TodaysTasks(int? page)
         {
              
             List<UserStory> userstories = db.UserStories
                 .Where(us => us.UserProfile_UserId == WebMatrix.WebData.WebSecurity.CurrentUserId
                 && us.CompletedDate == null && us.Sprint.EndDate >= DateTime.Today).ToList();
 
-            return PartialView(userstories);
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            var projectss = db.Projects.OrderBy(pr => pr.ProjectId);
+            return PartialView(userstories.ToPagedList(pageNumber, pageSize));
         }
 
         [ChildActionOnly]

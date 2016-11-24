@@ -1,4 +1,6 @@
-﻿@model IEnumerable<PPlanner.Models.Project>
+﻿@model PagedList.IPagedList<PPlanner.Models.Project>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{ 
     Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
 }
@@ -111,8 +113,9 @@
                         </tr>
                     }
                 }
-            </table>
-            <br />
+            </table>            
+            @Html.PagedListPager(Model, page => Url.Action("Index",
+            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
         </div>
     </div>
 </div>

@@ -66,6 +66,9 @@ D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\WebMatrix.WebData.xml
 D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\Org.Mentalis.Security.Cryptography.xml
 D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\Microsoft.AspNet.Scaffolding.12.0.xml
 D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\Mono.Math.xml
-D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\obj\Debug\PPlanner.Web.csprojResolveAssemblyReference.cache
 D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\obj\Debug\PPlanner.Web.dll
 D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\obj\Debug\PPlanner.Web.pdb
+D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\PagedList.dll
+D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\PagedList.Mvc.dll
+D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\PagedList.xml
+D:\BACHELOR\nbufinal2\NbuFinal\PPlanner.Web\bin\PagedList.Mvc.xml

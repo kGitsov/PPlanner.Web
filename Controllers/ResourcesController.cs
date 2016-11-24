@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 
 namespace PPlanner.Web.Controllers
 {
@@ -22,32 +23,12 @@ namespace PPlanner.Web.Controllers
         }
         public ActionResult Index(int? page)
         {
-            Dictionary < int, Resources > projectResources = new Dictionary<int, Resources>();
             
-            if (db.Resources.Count() > 0)
-            {
-                var newVar = db.Resources.Select(res => new { res.ResId, res.ResGroup, res.ResName, res.ResValue });
-                foreach (var item in newVar)
-                {
-                    Resources temp = new Resources();
-                    temp.ResGroup = item.ResGroup;
-                    temp.ResName = item.ResName;
-                    temp.ResValue = item.ResValue;
-                    projectResources.Add(item.ResId, temp);
-                }
-            }
-            else
-            {
-                Resources temp = new Resources();
-                temp.ResGroup = "";
-                temp.ResName = "";
-                temp.ResValue = "";
-                projectResources.Add(1, temp);
-            }
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            var resourcess = db.Resources.OrderBy(res => res.ResId);
 
-            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            //return View(projectResources.ToPagedList(currentPageIndex, 15));
-            return View(projectResources);
+            return View(resourcess.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult Create()

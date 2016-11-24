@@ -233,5 +233,5 @@ VALUES ('Projects','BreadCrumbCreateProjectSecond',N'Създаване на нов проект'),
 ('Projects','ProjectDeveloperAddHeadingTxt',N'Добавяне на потребител към проект'),
 ('Projects','ProjectDetailsDevInUse',N'Системата не изпълни исканата от Вас заявка. Избраният от Вас потребител участва в изпълнението на проектни задачи.'),
 ('Projects','ProjectDetailsDevAlreadyIn',N'Системата не изпълни исканата от Вас заявка. Избраният от Вас потребител вече участва в изпълнението на проекта.'),
-('Projects','BreadCrumbProjectUndoneSecond',N'Неизпълнени задачи')
+('Projects','BreadCrumbProjectUndoneSecond',N'Неизпълнени задачи') 
 
