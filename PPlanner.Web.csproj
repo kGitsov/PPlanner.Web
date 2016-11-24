@@ -237,15 +237,26 @@
   <ItemGroup>
     <Content Include="App_Data\UpdateDB_Resources.sql" />
     <Content Include="Content\awesome-bootstrap-checkbox.css" />
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\images\Error.png" />
+    <Content Include="Content\images\glyphicons-halflings-regular.eot" />
     <Content Include="Content\images\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\images\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\images\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\images\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -310,14 +321,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\images\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\images\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\images\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\images\glyphicons-halflings-regular.woff2" />
     <Content Include="Mvc.sitemap" />
     <None Include="Scripts\jquery-1.9.1-vsdoc.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -388,7 +391,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Images\accent.png" />
     <Content Include="Images\bullet.png" />

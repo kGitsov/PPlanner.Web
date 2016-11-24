@@ -67,7 +67,9 @@ namespace PPlanner.Controllers
         // GET: /Project/
         public ActionResult Index(int? page)
         {
-            
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+
             //Guid userGuid = (Guid)Membership.GetUser().ProviderUserKey;
             if (!User.IsInRole("Admin"))
             {
@@ -101,14 +103,16 @@ namespace PPlanner.Controllers
                 ViewBag.NumOfTasksToday = db.UserStories
                 .Where(us => us.UserProfile_UserId == WebMatrix.WebData.WebSecurity.CurrentUserId
                 && us.CompletedDate == null && us.Sprint.EndDate >= DateTime.Today).Count();
-
-                return View(userProjects);
+                pageSize = 5;
+                pageNumber = (page ?? 1);
+                var projectsss = userProjects.OrderBy(pr => pr.ProjectId);
+                return View(projectsss.ToPagedList(pageNumber, pageSize));
             }
             ViewBag.NumOfTasksToday = db.UserStories
                 .Where(us => us.UserProfile_UserId == WebMatrix.WebData.WebSecurity.CurrentUserId
                 && us.CompletedDate == null && us.Sprint.EndDate >= DateTime.Today).Count();
-            int pageSize = 5;
-            int pageNumber = (page ?? 1);
+            pageSize = 5;
+            pageNumber = (page ?? 1);
             var projectss = db.Projects.OrderBy(pr => pr.ProjectId);
             return View(projectss.ToPagedList(pageNumber, pageSize));
         }
