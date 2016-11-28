@@ -185,11 +185,12 @@ namespace PPlanner.Controllers
                     if (chartKey != null)
                     {
                         var cachedChart = Chart.GetFromCache(key: chartKey);
+                        
 
                         if (cachedChart == null)
                         {
 
-                            int countx = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Count();
+                            int countx = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId ).Count();
                             int county, maxy, maxyu;
 
                             if (db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Count() <= 0)
@@ -210,20 +211,20 @@ namespace PPlanner.Controllers
                                 county = maxyu;
                             }
 
-                            cachedChart = new Chart(468, 263);
-
+                            cachedChart = new Chart(468, 263, ChartTheme.Blue).AddLegend("Legend");
+                            var numTasks = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Count();
                             cachedChart.SetXAxis("Tasks", 0, countx+1);
-                            cachedChart.SetYAxis("Effort", 0, county);
+                            cachedChart.SetYAxis("Effort", 0, county+1);
                             
                             var xvalues = db.UserStories.Where(usx => usx.Project_ProjectId == project.ProjectId).Select(usx => usx.BackLogPriority);
 
                             Dictionary<int, int> yvaluesSM = new Dictionary<int, int>();
-                            List<int> ysmbp = new List<int>(db.UserStories.Where(usy => usy.Project_ProjectId == project.ProjectId).Select(usy => usy.BackLogPriority).ToList());
-                            List<int> ysme = new List<int>(db.UserStories.Where(usy => usy.Project_ProjectId == project.ProjectId).Select(usy => usy.Effort).ToList());
-
+                            List<int> ysmbp = new List<int>(db.UserStories.Where(usy => usy.Project_ProjectId == project.ProjectId ).Select(usy => usy.BackLogPriority).ToList());
+                            List<int> ysme = new List<int>(db.UserStories.Where(usy => usy.Project_ProjectId == project.ProjectId ).Select(usy => usy.Effort).ToList());
+                            
                             //var yvaluesUE = ;
                             Dictionary<int, int> yvaluesUE = new Dictionary<int, int>();
-                            List<int> yuee = new List<int>(db.UserStories.Where(usyu => usyu.Project_ProjectId == project.ProjectId).Select(usyu => usyu.User_Effort).ToList());
+                            List<int> yuee = new List<int>(db.UserStories.Where(usyu => usyu.Project_ProjectId == project.ProjectId ).Select(usyu => usyu.User_Effort).ToList());
 
                             for (int i = 0; i < ysme.Count; i++)
                             {
@@ -240,19 +241,19 @@ namespace PPlanner.Controllers
 
                             cachedChart.AddSeries(
                                 name: "SM",
-                                chartType: "Column",
-                                axisLabel: "",
-                                xValue: xvalues.ToArray(),
-                                yValues: ys.ToArray()
+                                chartType: "column",    
+                                xValue: xvalues,
+                                yValues: ys.ToArray()                                
                                 );
                             cachedChart.AddSeries(
                                 name: "UE",
-                                chartType: "Column",
-                                axisLabel: "",
-                                xValue: xvalues.ToArray(),
+                                chartType: "column",
+                                xValue: xvalues,
                                 yValues: ye.ToArray()
                                 );
-                            cachedChart.SaveToCache(key: chartKey,
+                            
+                            cachedChart.SaveToCache(key: chartKey,   
+                                                            
                                 minutesToCache: 1,                                
                                 slidingExpiration: true);
                         }

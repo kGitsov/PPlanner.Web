@@ -144,6 +144,5 @@ D:\BACHELOR\nbufinal2\PPlanner.Web\bin\WebMatrix.WebData.xml
 D:\BACHELOR\nbufinal2\PPlanner.Web\bin\Org.Mentalis.Security.Cryptography.xml
 D:\BACHELOR\nbufinal2\PPlanner.Web\bin\Microsoft.AspNet.Scaffolding.12.0.xml
 D:\BACHELOR\nbufinal2\PPlanner.Web\bin\Mono.Math.xml
-D:\BACHELOR\nbufinal2\PPlanner.Web\obj\Debug\PPlanner.Web.csprojResolveAssemblyReference.cache
 D:\BACHELOR\nbufinal2\PPlanner.Web\obj\Debug\PPlanner.Web.dll
 D:\BACHELOR\nbufinal2\PPlanner.Web\obj\Debug\PPlanner.Web.pdb

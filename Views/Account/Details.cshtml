@@ -142,17 +142,17 @@
                             foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.Title</td>
+                                    <td>@item.Title.ToString() </td>
 
-                                    <td>@item.Project.Name </td>
+                                    <td>@item.Project.Name.ToString() </td>
 
-                                    <td>@item.Sprint.Name</td>
+                                    <td>@item.Sprint.Name.ToString()</td>
 
-                                    <td>@item.BackLogPriority</td>
+                                    <td>@item.BackLogPriority.ToString()</td>
 
-                                    <td>@item.CompletedDate</td>
+                                    <td>@item.CompletedDate.ToString()</td>
 
-                                    <td>@item.Effort</td>
+                                    <td>@item.Effort.ToString()</td>
                                 </tr>
                             }
                         }
