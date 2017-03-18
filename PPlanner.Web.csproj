@@ -236,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\UpdateDB_Resources.sql" />
+    <Content Include="App_Data\UpdateItems-EndDate.sql" />
     <Content Include="Content\awesome-bootstrap-checkbox.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
@@ -322,6 +323,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Mvc.sitemap" />
+    <None Include="Properties\PublishProfiles\somee.pubxml" />
+    <None Include="Properties\PublishProfiles\someeftp.pubxml" />
     <None Include="Scripts\jquery-1.9.1-vsdoc.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

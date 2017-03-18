@@ -377,6 +377,7 @@ namespace PPlanner.Controllers
 
 
                     userstory.BackLogPriority = position;
+
                     db.Entry(userstory).State = EntityState.Modified;
 
                     //save back to database.

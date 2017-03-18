@@ -1,0 +1,82 @@
+﻿@model PPlanner.Models.Project
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+@{
+    ViewBag.Title = @resources["ProjectEditSprintsTitle"];
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "3" },
+    { "projectId", Model.ProjectId },
+    { "projectName", Model.Name},
+    { "variable", @resources["BreadCrumbProjectEditSprintSecond"]}
+})
+
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+
+    @using (Ajax.BeginForm("EditSprints", "Project", null, new AjaxOptions
+    {
+        HttpMethod = "Post",
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "SprintTable"
+    }, new { @Class = "form-horizontal" }))
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <h4 style="float:left;">@resources["ProjectDeleteHeadingTxt"] @Model.Name</h4>
+                <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Backlog", new { @ProjectId = Model.ProjectId })">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    @resources["BackButton"]
+                </a>
+                <button style="float:right; margin-right:10px;" type="submit" class="btn btn-xs btn-success">
+                    <span class="glyphicon glyphicon-tag"></span>
+                    @resources["NewListButton"]
+                </button>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="panel-body">
+                <div class="row mainwrapper">
+                    <!--sidebar-->
+                    <div class="col-md-10 col-md-offset-1">
+                        <fieldset>
+                            <legend>Project</legend>
+
+                            @Html.HiddenFor(model => model.ProjectId)
+
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    @resources["ProjectEditSprintSettingsIteration"]
+                                    @Html.TextBoxFor(model => model.NumOfIterationDay, new { @Class = "form-control", @Placeholder = @resources["PleaseEnterNum"] })
+                                    @Html.ValidationMessageFor(model => model.NumOfIterationDay)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <div class="controls checkbox-primary">
+                                    @resources["ProjectOnlyWorkingDaysMessage"]
+                                    @Html.CheckBoxFor(model => model.WorkingDaysOnly, new { @Class = "checkbox" })
+                                    @Html.ValidationMessageFor(model => model.WorkingDaysOnly)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <div class="controls">
+
+                                </div>
+                            </div>
+                            <br />
+                        </fieldset>
+                        <div id="SprintTable">
+                            @Html.Partial("_SprintTable", Model.Sprints)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

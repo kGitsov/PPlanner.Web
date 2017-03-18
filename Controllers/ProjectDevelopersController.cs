@@ -34,7 +34,7 @@ namespace PPlanner.Controllers
         public ActionResult AddNewDeveloper(string ProjectId)
         {
             ViewBag.ProjectId = ProjectId;
-            ViewBag.UsersList = new SelectList(db.UserProfiles.Where(us => us.RoleName == "Developer" || us.RoleName == "Product owner").Select(us => us.UserName), "UserName");
+            ViewBag.UsersList = new SelectList(db.UserProfiles.Where(us => us.RoleName != "Scrum master").Select(us => us.UserName), "UserName");
             ViewBag.RoleName = new SelectList(Roles.GetAllRoles(), "RoleName");
             int id = Convert.ToInt32(ProjectId);
             ViewBag.ProjectName = db.Projects.Where(pn => pn.ProjectId == id).Select(pn => pn.Name).FirstOrDefault().ToString();

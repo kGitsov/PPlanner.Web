@@ -181,7 +181,7 @@ namespace PPlanner.Controllers
 
             if (currentSprint != null)
             {
-                if (User.IsInRole("Scrum master"))
+                if (!User.IsInRole("Developer") )
                 {
                     userstories = db.UserStories
                         .Where(us => us.Project_ProjectId == ProjectId && us.Sprint_SprintId == currentSprint.SprintId).ToList();
@@ -207,7 +207,7 @@ namespace PPlanner.Controllers
                 userstories = db.UserStories
                 .Where(us => us.Project_ProjectId == 0).ToList();
 
-                ViewBag.currentSprint = "";
+                ViewBag.currentSprint = "Няма текущ спринт";
                 ViewBag.ToDoStatus = 1;
                 ViewBag.InProgress = 1;
                 ViewBag.Done = 1;

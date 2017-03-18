@@ -77,12 +77,12 @@ namespace PPlanner.Models
     public class RegisterModel
     {
         [Required(ErrorMessage = "Моля въведете потребителско име.")]
-        [StringLength(30, ErrorMessage = "Моля въведете парола с дължина минимум {1} символа", MinimumLength = 3)]
+        [StringLength(30, ErrorMessage = "Моля въведете парола с дължина минимум {2} символа", MinimumLength = 3)]
         [Display(Name = "User name")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Моля въведете парола.")]
-        [StringLength(100, ErrorMessage = "Моля въведете парола с дължина минимум {1} символа", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Моля въведете парола с дължина минимум {2} символа", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

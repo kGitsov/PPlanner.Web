@@ -113,7 +113,8 @@ namespace PPlanner.Controllers
                 && us.CompletedDate == null && us.Sprint.EndDate >= DateTime.Today).Count();
             pageSize = 5;
             pageNumber = (page ?? 1);
-            var projectss = db.Projects.OrderBy(pr => pr.ProjectId);
+            var projectss = db.Projects.OrderByDescending(pr => pr.StartDate)
+                                        .ThenBy(pr => pr.ProjectId);
             return View(projectss.ToPagedList(pageNumber, pageSize));
         }
 
@@ -162,17 +163,24 @@ namespace PPlanner.Controllers
                     Sprint sprint = db.Sprints
                                     .Where(s => s.Project_ProjectId == id && s.StartDate <= DateTime.Today && s.EndDate >= DateTime.Today)
                                     .FirstOrDefault() ?? null;
+                    ViewBag.totalDays = numberOfDays(project.StartDate, project.EndDate);
+                    ViewBag.remainingDays = numberOfDays(project.StartDate, project.EndDate) - numberOfDays(project.StartDate, DateTime.Today);
+                    if (ViewBag.remainingDays <= 0)
+                    {
+                        ViewBag.remainingDays = "-";
+                    }
+                    ViewBag.currentSprintCountTasks = db.UserStories.Where(cs => cs.Project_ProjectId == id && cs.ItemStatus_ItemStatusId < 3).Count();
+
 
                     if (sprint != null)
                     {
-                        ViewBag.totalDays = numberOfDays(project.StartDate, project.EndDate);
-                        ViewBag.remainingDays = numberOfDays(project.StartDate, project.EndDate) - numberOfDays(project.StartDate, DateTime.Today);
+                        
                         ViewBag.NoUserstories = db.UserStories.Where(nu => nu.Project_ProjectId == id).Count();
                         ViewBag.currentSprint = sprint.Name;
                         ViewBag.sprintStart = sprint.StartDate.ToString("dd/MM/yyyy");
                         ViewBag.sprintEnd = sprint.EndDate.ToString("dd/MM/yyyy");
-                        ViewBag.currentSprintCountTasks = db.UserStories.Where(cs => cs.Project_ProjectId == id &&
-                                                                                        cs.Sprint_SprintId == sprint.SprintId && cs.ItemStatus_ItemStatusId < 3).Count();
+                        //ViewBag.currentSprintCountTasks = db.UserStories.Where(cs => cs.Project_ProjectId == id &&
+                                                                                        //cs.Sprint_SprintId == sprint.SprintId && cs.ItemStatus_ItemStatusId < 3).Count();
                         //ViewBag.sprintStart = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(sprint.StartDate.Month) + " " + sprint.StartDate.Day;
                         //ViewBag.sprintEnd = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(sprint.EndDate.Month) + " " + sprint.EndDate.Day;
                     }
@@ -187,8 +195,8 @@ namespace PPlanner.Controllers
                         var cachedChart = Chart.GetFromCache(key: chartKey);
                         
 
-                        if (cachedChart == null)
-                        {
+                        //if (cachedChart == null)
+                        //{
 
                             int countx = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId ).Count();
                             int county, maxy, maxyu;
@@ -251,15 +259,16 @@ namespace PPlanner.Controllers
                                 xValue: xvalues,
                                 yValues: ye.ToArray()
                                 );
-                            
+                            //.hfgh
                             cachedChart.SaveToCache(key: chartKey,   
                                                             
-                                minutesToCache: 1,                                
+                                minutesToCache: 2,                                 
                                 slidingExpiration: true);
-                        }
-                                                
-                        byte[] uImage = new byte[cachedChart.ToWebImage("jpeg").GetBytes().Length];
-                        uImage = cachedChart.ToWebImage("jpeg").GetBytes();
+                        //}
+
+                        //byte[] uImage = new byte[cachedChart.ToWebImage("jpeg").GetBytes().Length];
+                        
+                        byte[] uImage = cachedChart.ToWebImage("jpeg").GetBytes();
                         var img = String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(uImage));
                         ViewBag.ChartData = img;
                         
@@ -391,7 +400,7 @@ namespace PPlanner.Controllers
             //
             // new System.Web.Mvc.SelectList(System.Web.Security.Roles.GetAllRoles(), "RoleName");
             //ViewData["RoleName"] = RolesList;
-            IEnumerable<SelectListItem> SCMs = new SelectList(db.UserProfiles.Where(up => up.RoleName == "Scrum master").ToList(), "UserId", "UserName");
+            IEnumerable<SelectListItem> SCMs = new SelectList(db.UserProfiles.Where(up => up.RoleName == "Scrum master" || up.RoleName == "Admin").ToList(), "UserId", "UserName");
             ViewData["ScrumMasters"] = SCMs;
             if (project.SM_UserId > 0)
             {

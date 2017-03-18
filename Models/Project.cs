@@ -19,22 +19,24 @@ namespace PPlanner.Models
         [Key]
         public int ProjectId { get; set; }
 
-        [Required]
-        [StringLength(300)]
+        [Required(ErrorMessage ="Задължително поле.")]
+        [StringLength(300, ErrorMessage = "Въведете стойност до 300 символа.")]
         [Display(Name = "Име на проект")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Задължително поле")]
         [Display(Name = "Дата от")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date, ErrorMessage = "Задължително поле")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", HtmlEncode = false)]
         public DateTime StartDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Задължително поле")]
         [Display(Name = "Дата до")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date, ErrorMessage = "Задължително поле") ]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", HtmlEncode = false)]
         public DateTime EndDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Задължително поле")]
         [Display(Name="Общо дни")]
         [Range(2,60)]
         public int NumOfIterationDay { get; set; }
@@ -56,7 +58,7 @@ namespace PPlanner.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (EndDate <= StartDate || EndDate <= DateTime.Today)
+            if (EndDate <= StartDate)
             {
                 yield return new ValidationResult("Крайната дата, трябва да бъде по-голяма от началната.");
             }

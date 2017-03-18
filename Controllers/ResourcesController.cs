@@ -24,9 +24,9 @@ namespace PPlanner.Web.Controllers
         public ActionResult Index(int? page)
         {
             
-            int pageSize = 5;
+            int pageSize = 25;
             int pageNumber = (page ?? 1);
-            var resourcess = db.Resources.OrderBy(res => res.ResId);
+            var resourcess = db.Resources.OrderBy(res => res.ResName);
 
             return View(resourcess.ToPagedList(pageNumber, pageSize));
         }

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PPlanner.Models.Sprint>
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+<table class="srtable">
+
+    <tr>
+        <th></th>
+        <th>
+            @resources["IterationPartialSprintTableName"]
+        </th>
+        <th>
+            @resources["IterationPartialSprintTableStartDate"]
+        </th>
+        <th>
+            @resources["IterationPartialSprintTableEndDate"]
+        </th>
+    </tr>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-id="@item.SprintId">
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.SprintId })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

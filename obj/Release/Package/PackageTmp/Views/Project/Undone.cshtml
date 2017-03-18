@@ -1,0 +1,124 @@
+﻿@model List<PPlanner.Models.UserStory>
+@{ 
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    ViewBag.Title = resources["ProjectUndoneTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+        { "lvl", "3" },
+        { "variable", @resources["BreadCrumbProjectUndoneSecond"] }
+    })
+
+
+<div class="row mainwrapper">
+    <div class="span2"><p></p></div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 style="float:left;">@resources["ProjectUndoneHeadingTxt"]</h4>
+
+            <div>
+                <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Details", "Project", new { id = ViewBag.ProjectId})">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    @resources["BackButton"]
+                </a>
+            </div>
+
+            <div style="clear:both;"></div>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-3 col-md-3">
+                <p>@resources["ProjectPeriod"]</p>
+                <div class="list-group-item disabled">@ViewBag.StartDate.ToString("dd.MM.yyyy") - @ViewBag.EndDate.ToString("dd.MM.yyyy")</div>
+                <p>@resources["ProjectPeriod"]</p>
+                <div class="list-group-item disabled">@ViewBag.UndoneTasks</div>
+                <p>@resources["ProjectPeriod"]</p>
+                <div class="list-group-item disabled">@ViewBag.CanceledTasks</div>
+                <p>@resources["ProjectPeriod"]</p>
+                <div class="list-group-item disabled">@ViewBag.WorkingButNotDone</div>
+
+            </div>
+            <!--sidebar-->
+            <div class="col-sm-9 col-md-9">
+                <div class="contentwrap ">
+                    <table class="table">
+                        <tr>
+                            <th style="min-width:100px;"></th>
+                            <th class="col-sm-4">@resources["ProjectUndoneName"]</th>
+                            <th class="col-sm-1">@resources["ProjectUndoneStatus"]</th>
+                            <th class="col-sm-1">@resources["ProjectUndoneEffort"]</th>
+                            <th class="col-sm-3">@resources["ProjectUndoneIteration"]</th>
+
+                            <th class="col-sm-2">@resources["ProjectUndoneUsername"]</th>
+                        </tr>
+
+                        <tbody>
+
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr data-id="@item.Id">
+                                        <td>
+
+                                            <i class="icon-move"></i>
+                                            <a class="editForm" href="@Url.Action("Details", "Backlog", new { id = item.Id })">
+                                                <i class="btn btn-xs btn-xs btn-default">
+                                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                                </i>
+                                            </a>
+                                            @if (!User.IsInRole("Developer"))
+                                            {
+                                            }
+
+                                            @if (User.IsInRole("Admin") || User.IsInRole("Scrum master"))
+                                            {
+                                                <i class="icon-move"></i>
+                                                        <a class="editForm" href="@Url.Action("Edit","Backlog", new { id = item.Id })">
+                                                            <i class="btn btn-xs btn-xs btn-success">
+                                                                <span class="glyphicon glyphicon-pencil"></span>
+                                                            </i>
+                                                        </a>
+                                                        <i class="icon-move"></i>
+                                                        <a class="editForm" href="@Url.Action("Delete","Backlog", new { id = item.Id })">
+                                                            <p class="btn btn-xs btn-xs btn-danger">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                            </p>
+                                                        </a>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ItemStatus.Status)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Effort)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Sprint.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserProfile.UserName)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5">@resources["NoResultsFounded"] </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

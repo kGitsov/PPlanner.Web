@@ -146,3 +146,4 @@ D:\BACHELOR\nbufinal2\PPlanner.Web\bin\Microsoft.AspNet.Scaffolding.12.0.xml
 D:\BACHELOR\nbufinal2\PPlanner.Web\bin\Mono.Math.xml
 D:\BACHELOR\nbufinal2\PPlanner.Web\obj\Debug\PPlanner.Web.dll
 D:\BACHELOR\nbufinal2\PPlanner.Web\obj\Debug\PPlanner.Web.pdb
+D:\BACHELOR\nbufinal2\PPlanner.Web\obj\Debug\PPlanner.Web.csprojResolveAssemblyReference.cache
