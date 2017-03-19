@@ -1,0 +1,49 @@
+﻿@model PPlanner.Models.UserRoles
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    var userRoles = Roles.GetAllRoles();
+    ViewBag.Title = resources["UserRolesTitle"];
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "23" },
+    {"firstVar", @resources["BreadCrumbUserManageFirst"] },
+    { "variable", @resources["BreadCrumbUserRolesSecond"] }
+})
+
+<div class="row mainwrapper">
+    <div class="span2"><p></p></div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 style="float:left;">@resources["UserRoles"]</h4>
+            <div>                
+                <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Project")">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    @resources["BackButton"]
+                </a>
+            </div>
+            
+            <div style="clear:both;"></div>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <table class="table">
+                    <tr>
+                        <th style="width:30px;"></th>
+                        <th>@resources["UserFirstName"] </th>
+                    </tr>
+                    @foreach (var item in userRoles)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@item</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

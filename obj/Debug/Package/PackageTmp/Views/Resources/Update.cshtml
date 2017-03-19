@@ -1,0 +1,70 @@
+﻿@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+
+    if (resources.Count == 0)
+    {
+        Html.Action("UpdateEN", "Resources");
+    }
+}
+
+
+@{
+    ViewBag.Title = resources["ResourcesUpdateTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "26" },
+    {"firstVar", resources["BreadCrumbResourcesFirst"] }, //
+    { "variable", resources["BreadCrumbResourcesUpdateSecond"] } //
+})
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+
+    @using (Html.BeginForm("Update", "Resources", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <h4 style="float:left;">@resources["ResourceUpdateHeadingTxt"]</h4>
+                <div>
+                    <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Resources")">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        @resources["BackButton"]
+                    </a>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-xs btn-success" style="float:right; margin-right: 10px;" type="submit">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        @resources["SaveButton"]
+                    </button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+
+            <fieldset>
+                <div class="panel-body">
+                    <br />
+                    <div class="col-md-10 col-md-offset-1">
+                        <legend>Resources</legend>
+
+                        <div class="display-label">
+                            @resources["ResourceUpdateFileUpload"]
+                        </div>
+                        <div class="form-group">
+                            <div class="controls">
+                                <input type="file" name="fileUpload" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+
+</div>

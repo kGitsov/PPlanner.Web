@@ -1,0 +1,13 @@
+﻿
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+@{
+    ViewBag.Title = "PageNotFound";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="text-align:center; vertical-align:middle; height:100%;position:relative;">
+    <img src="~/Content/images/Error.png" alt="404 cat" style="top:0;bottom:0;margin-top:30px;margin-bottom:30px;" width="150px;"/>
+    <h2>Възникна грешка! Страницата не е намерена...</h2>
+</div>

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=sql5018.smarterasp.net;Initial Catalog=DB_A1A3FE_pplanner;User Id=DB_A1A3FE_pplanner_admin;Password=!QAZ2wsx;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="D:\\BACHELOR\\nbufinal2\\PPlanner\.Web\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

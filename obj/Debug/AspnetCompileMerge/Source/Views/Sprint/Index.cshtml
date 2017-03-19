@@ -1,0 +1,92 @@
+﻿@model IEnumerable<PPlanner.Models.UserStory>
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+@{
+        ViewBag.Title = @resources["SprintIndexTitle"] + "- " + @ViewBag.SprintName;
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "3" },
+    { "projectId", ViewBag.CurrentProject },
+    { "variable", ViewBag.SprintName}
+})
+
+<div class="row mainwrapper">
+    <div class="span2"><p></p></div>
+
+    <div class="panel">
+        <div class="panel-heading">
+
+            <h4 style="float:left;">@resources["SprintIndexHeadingTxt"] @ViewBag.SprintName</h4>
+            <a href="@Url.Action("Index", "Backlog", new { ProjectId = ViewBag.CurrentProject })" class="btn btn-xs btn-default pull-right">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                @resources["BackButton"]
+            </a>
+            <div style="clear:both;"></div>
+            <h6><i>@resources["SprintIndexHeading"]<a href="@Url.Action("Details", "Project", new { id = ViewBag.CurrentProject })">@ViewBag.ProjectName</a></i></h6>
+        </div>
+        <div class="panel-body">
+            <div class="row mainwrapper">
+                <div class="col-sm-3 col-md-3">
+                    <h4 class="text-center login-title">@resources["SprintIndexActiveUsersHeadingTxt"]</h4>
+                    @Html.Action("UserList", "Sprint")
+                    <br />
+                </div>
+                <div class="col-sm-9 col-md-9">
+                    <div class="contentwrap">
+                        <div id="tsortable">
+                            <table id="sprintList" class="srtable table">
+
+                                <tbody>
+                                    <tr>
+                                        <th style="min-width:10px;"></th>
+                                        <th class="col-sm-6">@resources["SprintIndexTaskName"]</th>
+                                        <th class="col-sm-2">@resources["SprintIndexEffort"]</th>
+                                        <th class="col-sm-1">@resources["SprintIndexStatus"]</th>
+                                        <th class="col-sm-3">@resources["SprintIndexUserInCharge"]</th>
+                                    </tr>
+
+                                </tbody>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr data-id="@item.Id">
+                                            <td>
+                                                <img class="icon-move"></img>
+                                                <a class="editForm btn btn-xs btn-xs btn-default" href="@Url.Action("Edit", "Backlog", new { id = item.Id })">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Title)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Effort)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ItemStatus.Status)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserProfile.UserName)
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+
+                            <!--tasks-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input id="ProjectId" name="ProjectId" type="hidden" value="@ViewBag.CurrentProject" class="form-control">

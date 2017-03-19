@@ -1,0 +1,68 @@
+﻿@model PPlanner.Models.UserProfile
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    ViewBag.Title = @resources["AccountUploadImageTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "23" },
+    { "firstVar", @resources["BreadCrumbUserManageFirst"] },
+    { "variable", @resources["BreadCrumbEditUserSecond"] }
+})
+
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+
+    @using (Html.BeginForm("UploadImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <h4 style="float:left;">@resources["AccountUploadImageHeadingTxt"]</h4>
+                <div>
+                    <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Details", "Account", new { @name = Model.UserName})">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        @resources["BackButton"]
+                    </a>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-xs btn-success" style="float:right; margin-right: 10px;" type="submit">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        @resources["ChangeButton"]
+                    </button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+
+            <fieldset>
+                <legend>Upload Image</legend>
+
+                <div class="panel-body">
+                    <br />
+                    <div class="col-md-10 col-md-offset-1">
+
+                        <div class="display-label">
+                            @resources["AccountUploadImageInputTitle"]
+                        </div>
+                        <div class="form-group">
+                            <div class="controls">
+                                <input type="file" name="fileUpload" />
+                            </div>
+                        </div>                        
+
+                        @Html.HiddenFor(model => model.UserName)
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+</div>

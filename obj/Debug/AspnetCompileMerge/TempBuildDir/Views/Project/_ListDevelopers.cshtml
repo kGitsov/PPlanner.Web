@@ -1,0 +1,67 @@
+﻿@model List<Tuple<PPlanner.Models.UserProfile, int, int, int>>
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+    var name = "";
+    
+}
+
+@Html.Raw(TempData["msg"])
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>@resources["ProjectDetailsDeveloperList"]</th>
+        <th>@resources["ProjectDetailsDeveloperAllTasks"]</th>
+        <th>@resources["ProjectDetailsDeveloperLastTasks"]</th>
+    </tr>
+
+    <tbody>
+        @foreach (Tuple<PPlanner.Models.UserProfile, int, int, int> item in Model)
+        {
+            
+
+            <tr>
+                @if (item != null)
+                {
+                <td>
+                    @if (User.IsInRole("Scrum master")||User.IsInRole("Admin"))
+                    {
+                        <a href="@Url.Action("Delete", "ProjectDevelopers", new { id = item.Item4, ProjectId = ViewBag.ProjectId }, null)" class="btn btn-xs btn-danger">
+                            <span class="glyphicon glyphicon-erase"></span>
+                        </a>
+                    }
+
+                    <a class="btn btn-xs btn-default" style="float:right; margin-right:10px;" href="@Url.Action("Details", "Account", new { name = item.Item1.UserName })">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+
+                    </a>
+
+                </td>
+                <td> 
+                    @{ 
+                        if (item.Item1.FirstName != null)
+                        {
+                            name = item.Item1.FirstName + " " + item.Item1.LastName + " (" + item.Item1.RoleName + ")";
+                        }
+                        else
+                        {
+                            name = item.Item1.UserName + " (" + item.Item1.RoleName + ")";
+                        }
+                    }
+                        
+                    @name
+
+                </td>
+                <td>@item.Item2</td>
+
+                <td>@item.Item3</td>
+                        }
+                        else
+                        {
+                            <td colspan="3">Няма намерени резултати</td>
+                        }
+            </tr>
+        }
+    </tbody>
+
+</table>

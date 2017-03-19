@@ -1,0 +1,16 @@
+﻿@model IEnumerable<PPlanner.Models.UserProfile>
+
+
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+<ul class="list-unstyled" >
+    @foreach (var item in Model) {
+        <li id="dropUser" class="dropUser list-group-item disabled" data-UserId="@item.UserId">
+            @item.UserName
+        </li>
+    }
+</ul>
+
+@Html.Hidden("setUserURL",Url.Action("setUser","Sprint"))

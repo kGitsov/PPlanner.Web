@@ -1,0 +1,41 @@
+﻿
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+
+@{
+    ViewBag.Title = resources["ProjectTasksTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "22" },
+    { "variable", @resources["BreadCrumbProjectTaskSecond"] }
+})
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading">
+
+            <h4 style="float:left;"><i class="icon-tasks"></i>@resources["ProjectTasksHeadingTxt"]</h4>
+            <div>
+                <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Project")">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    @resources["BackButton"]
+                </a>
+            </div>
+            <div style="clear:both"></div>
+            <!--tasks-->
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-12 col-md-12">
+                    <div id="tsortable">
+                        @Html.Action("TodaysTasks")
+                    </div>
+            </div>
+            </div>
+        </div>
+    </div>

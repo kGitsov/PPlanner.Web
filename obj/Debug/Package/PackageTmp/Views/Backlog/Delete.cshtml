@@ -1,0 +1,91 @@
+﻿@model PPlanner.Models.UserStory
+@{
+    Dictionary<string, string> resources = PPlanner.GetResources.GetResourcesFromDB();
+}
+@{
+    ViewBag.Title = @resources["BacklogDeleteTitle"] + Model.Title;
+}
+
+@Html.Partial("_Breadcrumbs", new ViewDataDictionary(ViewData) {
+    { "lvl", "3" },
+    { "projectId", Model.Project_ProjectId },
+    { "projectName", Model.Project.Name},
+    { "variable", @resources["BreadCrumbBacklogDeleteSecond"]}
+})
+<div class="row mainwrapper">
+    <div class="span2">
+        <p></p>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <h4 style="float:left;">@resources["BacklogDeleteHeaderTxt"] @Model.Project.Name</h4>            
+            <a class="btn btn-xs btn-default" style="float:right;" href="@Url.Action("Index", "Backlog", new { ProjectId=Model.Project_ProjectId })">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                @resources["BackButton"]
+            </a>
+            @using (Html.BeginForm())
+            {
+                <button type="submit" class="btn btn-xs btn-warning" style="float:right; margin-right: 10px;">
+                    <span class="glyphicon glyphicon-trash"> </span>
+                    @resources["DeleteButton"]
+                </button>
+            }
+            <div style="clear:both;"></div>
+
+            <h6><i>@resources["BacklogDeleteInProject"] <a href="@Url.Action("Details","Project", new { id=Model.Project_ProjectId })">@Model.Project.Name</a></i></h6>
+        </div>
+
+        <div class="panel-body">
+            <div class="col-md-10 col-md-offset-1">
+                <fieldset>                         
+                    <legend>UserStory</legend>
+
+                    <div class="display-label">
+                        @resources["BacklogDeleteTaskName"]
+                    </div>
+
+                    <div class="list-group-item disabled">
+                        @Html.DisplayFor(model => model.Title)
+                    </div>
+
+                    <div class="display-label">
+                        @resources["BacklogDeletePriority"]
+                    </div>
+                    <div class="list-group-item disabled">
+                        @Html.DisplayFor(model => model.BackLogPriority)
+                    </div>
+
+                    <div class="display-label">
+                        @resources["BacklogDeleteEffort"]
+                    </div>
+                    <div class="list-group-item disabled">
+                        @Html.DisplayFor(model => model.Effort)
+                    </div>
+                    <br />
+                    <div class="display-label">
+                        @resources["BacklogDeleteProjectName"]
+                    </div>
+                    <div class="list-group-item disabled">
+                        @Html.DisplayFor(model => model.Project.Name)
+                    </div>
+
+                    <div class="display-label">
+                        @resources["BacklogDeleteTaskStatus"]
+                    </div>
+                    <div class="list-group-item disabled">
+                        @Html.DisplayFor(model => model.ItemStatus.Status)
+                    </div>
+
+                    <div class="display-label">
+                        @resources["BacklogDeleteSprint"]
+                    </div>
+                    <div class="list-group-item disabled">
+                        @Html.DisplayFor(model => model.Sprint.Name)
+                    </div>
+                    <br />
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
