@@ -24,7 +24,8 @@ namespace PPlanner.Models
 
         [Range(1, 10)]
         public int User_Effort { get; set; }
-
+        public int duration { get; set; }
+        public DateTime? StartDate { get; set; }
         public DateTime? CompletedDate { get; set; }
 
         public int? UserProfile_UserId { get; set; }

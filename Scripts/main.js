@@ -170,7 +170,7 @@
                         d2 = gdata.d2;
                         d1 = [[0, maxy], [maxx, 0]];
 
-                        DrawGraph();
+                        DrawGraph(gdata);
                     }
 
                 } else {
@@ -181,26 +181,28 @@
                 $("#StatusArea").text("Възникна грешка! Прекъсна връзката, докато се актуализира графиката.");
             });
 
-        function DrawGraph() {
+        function DrawGraph(gdata) {
             $.plot("#graphholder", [{
                 data: d1,
                 lines: { show: true },
                 color: "#000",
                 shadowSize: 0,
-                label: "Ideal"
+                label: "Ideal project"
 
             }, {
                 data: d2,
                 lines: { show: true, fill: true },
-                color: "#2e89cb"
+                color: "#2e89cb",
+                label: "Project"
+
             }], {
                 xaxis: {
                 min: 0,
-                max: maxx
+                max: gdata.maxx
             },
                 yaxis: {
                 min: 0,
-                max: maxy
+                max: gdata.maxy
             }
             });
         }
@@ -214,7 +216,7 @@
 
     //var graphholder = 
 
-    if ($("#graphholder1").exists()) {
+    if ($("#graphholder2").exists()) {
 
         var prjId = $("#ProjectId").val();
         $("#StatusMessage").text("Графиката се актуализира");
@@ -222,11 +224,9 @@
         var maxx = 13.5; //total days
         var maxy = 12.5; //total effort
 
-        var d1 = [[0, maxy], [maxx, 0]];
-        //total effort of work completed each day. [day,effort]
-        var d2 = [[0, 12.5], [1, 12], [2, 11.5], [3, 9]];
+        var d2;
 
-        var urlStr = $("#GraphPostUrl1").val();
+        var urlStr = $("#GraphPostUrl2").val();
 
         $.post(urlStr, { ProjectId: prjId }, function (data) {
 
@@ -244,10 +244,11 @@
                     maxx = gdata.maxx;
                     maxy = gdata.maxy;
 
-                    d2 = gdata.d2;
+                    d2 = gdata.u2;
+                    d3 = gdata.p2;
                     d1 = [[0, maxy], [maxx, 0]];
 
-                    DrawGraph();
+                    DrawGraph2(gdata);
                 }
 
             } else {
@@ -258,32 +259,199 @@
             $("#StatusArea").text("Възникна грешка! Прекъсна връзката, докато се актуализира графиката.");
         });
 
-        function DrawGraph() {
-            $.plot("#graphholder1", [{
-                data: d1,
-                lines: { show: true },
-                color: "#000",
-                shadowSize: 0,
-                label: "Ideal"
-
-            }, {
+        function DrawGraph2(gdata) {
+            $.plot("#graphholder2", [{
                 data: d2,
                 lines: { show: true, fill: true },
-                color: "#2e89cb"
+                points: { show: true, radius: 3 },
+                color: "#2e89cb",
+                label: "User score"
+            }, {
+                data: d3,
+                lines: { show: true, fill: true },
+                points: { show: true, radius: 3 },
+                color: "#ff7f7f",
+                label: "PM score"
             }], {
                 xaxis: {
                     min: 0,
-                    max: maxx
+                    max: gdata.maxx,
+                    ticks: gdata.maxx
                 },
                 yaxis: {
                     min: 0,
-                    max: maxy
+                    max: gdata.maxy,
+                    ticks: 11
                 }
             });
         }
-
     }
 
+    if ($("#graphholder3").exists()) {
+
+        var prjId = $("#ProjectId").val();
+        $("#StatusMessage").text("Графиката се актуализира");
+
+        var maxx = 13.5; //total days
+        var maxy; //total effort
+        var miny;
+        var d2;
+
+        var urlStr = $("#GraphPostUrl3").val();
+
+        $.post(urlStr, { ProjectId: prjId }, function (data) {
+
+            if (data) {
+                $("#StatusMessage").text("Графиката е актуализирана");
+                var gdata;
+
+                if (JSON.stringify) {
+                    gdata = jQuery.parseJSON(JSON.stringify(data));
+                } else {
+                    gdata = jQuery.parseJSON(String(data));
+                }
+
+                if (gdata) {
+                    maxx = gdata.maxx;
+                    maxy = gdata.maxy;
+                    miny = gdata.miny;
+
+                    d3 = gdata.p2;
+                    d1 = [[miny, maxy], [maxx, 0]];
+                    d2 = [[0, 0], [maxx, 0]];
+
+                    DrawGraph3(gdata);
+                }
+
+            } else {
+                $("#StatusMessage").text("Възникна грешка! Прекъсна връзката, докато се актуализира графиката.");
+            }
+
+        }).fail(function () {
+            $("#StatusArea").text("Възникна грешка! Прекъсна връзката, докато се актуализира графиката.");
+        });
+
+        function DrawGraph3(gdata) {               
+            //var xticks = [];
+            //for (var i = 0; i < gdata.maxx; i++) {
+                //xticks.push([i, gdata.ids[i]])
+            //}
+            $.plot("#graphholder3", [{                
+                data: d3,
+                threshold: {
+                    below: 0,
+                    color: "green"
+                },
+                    lines: { show: true, fill: true },                
+                    color: "#ff7f7f",
+                    label: "Good"
+                
+            },{
+                data: d2,
+                threshold: {
+                    below: 2,
+                    color: "green"
+                },
+                lines: { show: true, fill: true },
+                points: { show: true, radius: 3 },
+                color: "green",
+                label: "Difference"
+            }]
+            , {
+                xaxis: {
+                    min: 0,
+                    max: gdata.maxx,
+                    ticks: gdata.maxx//xticks
+                },
+                yaxis: {
+                    min: gdata.miny-1,
+                    max: gdata.maxy+1,
+                    ticks: Math.sqrt(Math.pow(gdata.miny,2)+Math.pow(gdata.maxy,2))+1
+                    
+                }
+            
+            });
+
+
+        }
+    }
+
+
+
+    if ($("#graphholder4").exists()) {
+
+        var prjId = $("#ProjectId").val();
+        $("#StatusMessage").text("Графиката се актуализира");
+
+        var maxx = 13.5; //total days
+        var maxy = 12.5; //total effort
+
+        var d2;
+
+        var urlStr = $("#GraphPostUrl4").val();
+
+        $.post(urlStr, { ProjectId: prjId }, function (data) {
+
+            if (data) {
+                $("#StatusMessage").text("Графиката е актуализирана");
+                var gdata;
+
+                if (JSON.stringify) {
+                    gdata = jQuery.parseJSON(JSON.stringify(data));
+                } else {
+                    gdata = jQuery.parseJSON(String(data));
+                }
+
+                if (gdata) {
+                    maxx = gdata.maxx;
+                    maxy = gdata.maxy;
+
+                    d2 = gdata.z2;
+                    d3 = gdata.p2;
+                    d1 = [[0, maxy], [maxx, 0]];
+
+                    DrawGraph4(gdata);
+                }
+
+            } else {
+                $("#StatusMessage").text("Възникна грешка! Прекъсна връзката, докато се актуализира графиката.");
+            }
+
+        }).fail(function () {
+            $("#StatusArea").text("Възникна грешка! Прекъсна връзката, докато се актуализира графиката.");
+        });
+
+        function DrawGraph4(gdata) {
+            $.plot("#graphholder4", [{
+                data: d2,
+                lines: { show: true, fill: true },
+                points: { show: true, radius: 3 },
+                color: "#2e89cb",
+                label: "Manager score"
+            }, {
+                data: d3,
+                lines: { show: true, fill: true },
+                points: { show: true, radius: 3 },
+                color: "#ff7f7f",
+                label: "User score"
+            }], {
+                xaxis: {
+                    min: 0,
+                    max: gdata.maxx,
+                    ticks: gdata.maxx
+                },
+                yaxis: {
+                    min: 0,
+                    max: gdata.maxy,
+                    ticks: gdata.maxy
+                }
+            });
+        }
+    }
+
+
+
+    
     //----------------------------------
     //Sprint board
 

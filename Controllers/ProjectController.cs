@@ -188,94 +188,7 @@ namespace PPlanner.Controllers
                     GetProjectNameForBreadcrumbs(project);
 
                    
-                    var chartKey = project.ProjectId.ToString();
-
-                    if (chartKey != null)
-                    {
-                        var cachedChart = Chart.GetFromCache(key: chartKey);
-                        
-
-                        //if (cachedChart == null)
-                        //{
-
-                            int countx = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId ).Count();
-                            int county, maxy, maxyu;
-
-                            if (db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Count() <= 0)
-                            {
-                                maxy = 0;
-                                maxyu = 0;
-                            }
-                            else
-                            {
-                                maxy = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Select(us => us.Effort).Max();
-                                maxyu = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Select(us => us.User_Effort).Max();
-                            }
-
-                            if (maxy >= maxyu) {
-                                county = maxy;
-                            }
-                            else {
-                                county = maxyu;
-                            }
-
-                            cachedChart = new Chart(468, 263, ChartTheme.Blue).AddLegend("Legend");
-                            var numTasks = db.UserStories.Where(us => us.Project_ProjectId == project.ProjectId).Count();
-                            cachedChart.SetXAxis("Tasks", 0, countx+1);
-                            cachedChart.SetYAxis("Effort", 0, county+1);
-                            
-                            var xvalues = db.UserStories.Where(usx => usx.Project_ProjectId == project.ProjectId).Select(usx => usx.BackLogPriority);
-
-                            Dictionary<int, int> yvaluesSM = new Dictionary<int, int>();
-                            List<int> ysmbp = new List<int>(db.UserStories.Where(usy => usy.Project_ProjectId == project.ProjectId ).Select(usy => usy.BackLogPriority).ToList());
-                            List<int> ysme = new List<int>(db.UserStories.Where(usy => usy.Project_ProjectId == project.ProjectId ).Select(usy => usy.Effort).ToList());
-                            
-                            //var yvaluesUE = ;
-                            Dictionary<int, int> yvaluesUE = new Dictionary<int, int>();
-                            List<int> yuee = new List<int>(db.UserStories.Where(usyu => usyu.Project_ProjectId == project.ProjectId ).Select(usyu => usyu.User_Effort).ToList());
-
-                            for (int i = 0; i < ysme.Count; i++)
-                            {
-                                yvaluesSM.Add(ysmbp[i], ysme[i]);
-                                yvaluesUE.Add(ysmbp[i], yuee[i]);
-                            }
-
-                            yvaluesSM.OrderBy(key => key.Key);
-                            yvaluesUE.OrderBy(key => key.Key);
-
-                            var ys = yvaluesSM.Values;
-                            var ye = yvaluesUE.Values;
-                            //var two = new[] { yvaluesSM.ToArray(), yvaluesUE.ToArray() };
-
-                            cachedChart.AddSeries(
-                                name: "SM",
-                                chartType: "column",    
-                                xValue: xvalues,
-                                yValues: ys.ToArray()                                
-                                );
-                            cachedChart.AddSeries(
-                                name: "UE",
-                                chartType: "column",
-                                xValue: xvalues,
-                                yValues: ye.ToArray()
-                                );
-                            //.hfgh
-                            cachedChart.SaveToCache(key: chartKey,   
-                                                            
-                                minutesToCache: 2,                                 
-                                slidingExpiration: true);
-                        //}
-
-                        //byte[] uImage = new byte[cachedChart.ToWebImage("jpeg").GetBytes().Length];
-                        
-                        byte[] uImage = cachedChart.ToWebImage("jpeg").GetBytes();
-                        var img = String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(uImage));
-                        ViewBag.ChartData = img;
-                        
-                    }
-                    
-
-
+                   
 
                     
                     return View(project);
@@ -575,6 +488,167 @@ namespace PPlanner.Controllers
         }
 
 
+		
+		[HttpPost]
+        public ActionResult GetGraph2(int ProjectId)
+        {
+             
+            //{"name":"John"}
+            GraphData2 graphData2 = new GraphData2();
+			
+			Project prj = db.Projects.Find(ProjectId);
+			
+			int maxy = 11;
+			int maxx = prj.UserStories.Where(u => u.CompletedDate != null).Select(s => s.Id).Count();
+            //int[] usr = prj.UserStories.Select(u => u.Effort).ToArray();
+            int[] usr = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.Effort).ToArray();
+			
+			int[][] tmpu2 = new int[maxx + 1][];
+
+            for (int i = 0; i < maxx; i++)
+            {                
+                tmpu2[i] = new int[2] { i, usr[i] };
+            }
+
+			int[] usru = prj.UserStories.Where(u => u.CompletedDate != null).Select(usu => usu.User_Effort).ToArray();
+			int[][] tmpp2 = new int[maxx + 1][];
+			
+			for (int i = 0; i < maxx; i++)
+            {                
+                tmpp2[i] = new int[2] { i, usru[i] };
+            }
+
+            graphData2.maxx = maxx;
+            graphData2.maxy = maxy;
+            graphData2.u2 = tmpu2; 
+			graphData2.p2 = tmpp2;
+            return Json(graphData2, JsonRequestBehavior.AllowGet);
+        }
+
+		class GraphData2
+		{
+            public int maxx { get; set; }
+            public int maxy { get; set; }
+            public int ue { get; set; }
+			public int pme { get; set; }
+			public int[][] u2 { get; set; }
+			public int[][] p2 { get; set; }
+		}
+
+
+        [HttpPost]
+        public ActionResult GetGraph3(int ProjectId)
+        {
+
+            //{"name":"John"}
+            GraphData3 graphData3 = new GraphData3();
+
+            Project prj = db.Projects.Find(ProjectId);
+
+            int maxy = 0;
+            int miny = 0;
+            //int maxx = prj.UserStories.Select(s => s.Id).Count();
+            int maxx = prj.UserStories.Where(u => u.CompletedDate != null).Select(s => s.Id).Count();
+            //int[] usr = prj.UserStories.Select(u => u.Effort).ToArray();
+            int[] usr = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.Effort).ToArray();
+            int[] usrids = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.Id).ToArray();
+            //int[] usr = prj.UserStories.Select(us => us.Effort).ToArray();
+            int[] usru = prj.UserStories.Where(u => u.CompletedDate != null).Select(usu => usu.User_Effort).ToArray();
+
+            int[][] tmpp2 = new int[maxx+1][];
+
+            for (int i = 0; i < maxx; i++)
+            {
+                tmpp2[i+1] = new int[2] { i, usru[i]-usr[i]};
+
+                if (miny > (usru[i] - usr[i]))
+                {
+                    miny = (usru[i] - usr[i]);
+                }
+                if (maxy < (usru[i] - usr[i]))
+                {
+                    maxy = (usru[i] - usr[i]);
+                }
+            }
+
+            
+            graphData3.maxx = maxx;
+            graphData3.maxy = maxy;
+            graphData3.miny = miny;
+            graphData3.p2 = tmpp2;
+            graphData3.ids = usrids;
+            return Json(graphData3, JsonRequestBehavior.AllowGet);
+        }
+
+        class GraphData3
+        {
+            public int[] ids { get; set; }
+            public int maxx { get; set; }
+            public int maxy { get; set; }
+            public int miny { get; set; }
+            public int ue { get; set; }
+            public int pme { get; set; }
+            public int[][] p2 { get; set; }
+        }
+
+
+        [HttpPost]
+        public ActionResult GetGraph4(int ProjectId)
+        {
+
+            //{"name":"John"}
+            GraphData4 graphData4 = new GraphData4();
+
+            Project prj = db.Projects.Find(ProjectId);
+
+            int maxy = 0;
+            int miny = 0;
+
+            int maxx = prj.UserStories.Where(u => u.CompletedDate != null).Select(s => s.Id).Count();
+
+            DateTime?[] usrSD = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.StartDate).ToArray();
+            int[] usrids = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.Id).ToArray();
+
+            DateTime?[] usrCD = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.CompletedDate).ToArray();
+            int[] usrD = prj.UserStories.Where(u => u.CompletedDate != null).Select(u => u.duration).ToArray();
+
+            int[][] tmpp2 = new int[maxx + 1][];
+            int[][] tmpg2 = new int[maxx + 1][];
+
+            for (int i = 0; i < maxx; i++)
+            {
+                TimeSpan? temp = usrCD[i] - usrSD[i];
+                tmpp2[i + 1] = new int[2] { i, (int)temp.Value.TotalDays };
+                if (maxy <usrD[i] )
+                {
+                    maxy = usrD[i];
+                }
+                if (maxy < (int)temp.Value.TotalDays)
+                {
+                    maxy = (int)temp.Value.TotalDays;
+                }
+                tmpg2[i + 1] = new int[2] { i, usrD[i]};
+                
+            }
+            graphData4.maxx = maxx;
+            graphData4.maxy = maxy;
+            graphData4.miny = miny;
+            graphData4.p2 = tmpp2;
+            graphData4.z2 = tmpg2;
+            graphData4.ids = usrids;
+            return Json(graphData4, JsonRequestBehavior.AllowGet);
+        }
+
+        class GraphData4
+        {
+            public int[] ids { get; set; }
+            public int maxx { get; set; }
+            public int maxy { get; set; }
+            public int miny { get; set; }
+            public int[][] p2 { get; set; }
+            public int[][] z2 { get; set; }
+        }
+
         [HttpPost]
         public ActionResult GetGraph(int ProjectId)
         {
@@ -839,4 +913,6 @@ namespace PPlanner.Controllers
         public int maxy { get; set; }
         public int[][] d2 { get; set; }
     }
+	
+
 }

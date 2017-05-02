@@ -71,17 +71,39 @@
                     <div class="contentwrap ">
                         <h3 class="text-center login-title">
                             <span class="glyphicon glyphicon-signal"></span>
-                            @resources["ProjectBurnDownChart"]
+                            BurnDown Chart
+                            @*resources["ProjectBurnDownChart"]*@
                         </h3>
-                        <div class="demo-container">
+                        <div class="demo-container" style="width: 100%;">
                             <div id="graphholder" class="graphholder"></div>
                         </div>
                         @if (User.IsInRole("Product owner") && ViewBag.NoUserstories > 0)
-	                    {
-                            <div class="demo-container">
-                                <img src="@chartSrc" class="graphholder" />
+                        {
+                            <h3 class="text-center login-title">
+                                <span class="glyphicon glyphicon-asterisk"></span>
+                                Comparison chart
+                            </h3>
+                            <div class="demo-container third" style="width: 100%;">
+								<div id="graphholder2" class="graphholder"></div>
+                                
                             </div>
-	                    }
+                            <h3 class="text-center login-title">
+                                <span class="glyphicon glyphicon-bell"></span>
+                                Difference chart
+                            </h3>
+                            <div class="demo-container third" style="width: 100%;">
+                                <div id="graphholder3" class="graphholder"></div>
+
+                            </div>
+                            <h3 class="text-center login-title">
+                                <span class="glyphicon glyphicon-bell"></span>
+                                Time chart
+                            </h3>
+                            <div class="demo-container third" style="width: 100%;">
+                                <div id="graphholder4" class="graphholder"></div>
+
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -121,6 +143,10 @@
     </div>
 
     @Html.Hidden("GraphPostUrl", Url.Action("GetGraph", "Project"))
+	@Html.Hidden("GraphPostUrl2", Url.Action("GetGraph2", "Project"))
+    @Html.Hidden("GraphPostUrl3", Url.Action("GetGraph3", "Project"))
+    @Html.Hidden("GraphPostUrl4", Url.Action("GetGraph4", "Project"))
+
     @Html.Hidden("ProjectId", Model.ProjectId.ToString())
 
     @section Scripts {
